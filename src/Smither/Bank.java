@@ -18,6 +18,7 @@ public class Bank extends Task {
 
     @Override
     public void execute() {
+        System.out.println("Banking");
         if(ctx.bank.opened()) {
             if(ctx.bank.depositInventory()) {
                 final int inventCount = ctx.inventory.select().count();

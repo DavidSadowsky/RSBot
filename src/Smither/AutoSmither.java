@@ -26,6 +26,7 @@ public class AutoSmither extends PollingScript<ClientContext> {
 
     @Override
     public void stop() {
+        System.out.println("Calculating break...");
         Random rand = new Random();
         if(breakCount == 36) {
             System.out.println("Logging out");
@@ -36,7 +37,7 @@ public class AutoSmither extends PollingScript<ClientContext> {
             System.out.println("Taking a 5-10 minute break");
             Condition.sleep(300000 + rand.nextInt(0, 300000));
         }
-        else {
+        else if(breakCount != 0) {
             System.out.println("Taking a 1-2 minute break");
             Condition.sleep(60000 + rand.nextInt(0, 60000));
         }
@@ -47,13 +48,9 @@ public class AutoSmither extends PollingScript<ClientContext> {
 
     @Override
     public void poll() {
-        if(ctx.game.tab() != Game.Tab.INVENTORY) {
+        if(ctx.game.tab() != Game.Tab.INVENTORY && !(ctx.bank.opened())) {
             System.out.println("Opening inventory");
             ctx.game.tab(Game.Tab.INVENTORY);
-        }
-        if(ctx.movement.energyLevel() == 100 && !(ctx.movement.running(true))) {
-            System.out.println("Turning on run");
-            ctx.movement.running(true);
         }
         for(Task task : taskList) {
             if((new Date()).getTime() - startTime > 10*60*1000 && ctx.objects.id(FURNACE_ID).nearest().poll().tile().distanceTo(ctx.players.local()) < 10) {

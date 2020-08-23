@@ -15,16 +15,24 @@ public class Walk extends Task {
 
     @Override
     public boolean activate() {
-        return (ctx.inventory.select().count() == 14 && ctx.inventory.select().id(2349).count() > 12) || (ctx.inventory.select().count() == 28 && pathToBank[0].distanceTo(ctx.players.local()) > 6);
+        return (ctx.inventory.select().count() == 14 && ctx.inventory.select().id(2349).count() > 13) || (ctx.inventory.select().count() == 28 && pathToBank[0].distanceTo(ctx.players.local()) > 6);
     }
 
     @Override
     public void execute() {
         if (!ctx.players.local().inMotion() || ctx.movement.destination().equals(Tile.NIL) || ctx.movement.destination().distanceTo(ctx.players.local()) < 5) {
             if(ctx.inventory.count() == 14) {
+                System.out.println("Walking to bank");
+                if(ctx.movement.energyLevel() > 90) {
+                    ctx.movement.running(true);
+                }
                 walker.walkPath(pathToBank);
             }
             else {
+                System.out.println("Walking to furnace");
+                if(ctx.movement.energyLevel() > 90) {
+                    ctx.movement.running(true);
+                }
                 walker.walkPathReverse(pathToBank);
             }
         }
