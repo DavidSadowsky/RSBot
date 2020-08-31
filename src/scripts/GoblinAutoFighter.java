@@ -43,13 +43,8 @@ public class GoblinAutoFighter extends PollingScript<ClientContext> {
     }
 
     public boolean shouldAttack() {
-        return !ctx.players.local().inCombat() && hasFood();
+        return !ctx.players.local().inCombat() && ctx.players.local().animation() == -1;
     }
-
-    public boolean hasFood() {
-        return ctx.inventory.select().id(FOOD_ID).count() > 0;
-    }
-
 
     public void attack() {
         final Npc GOBLIN_TO_ATTACK = ctx.npcs.select().id(GOBLIN_IDS).select(new Filter<Npc>() {
@@ -76,14 +71,12 @@ public class GoblinAutoFighter extends PollingScript<ClientContext> {
         Item foodToEat = ctx.inventory.id(FOOD_ID).poll();
         foodToEat.interact("Eat", "Shrimps");
 
-        final int startingHealth = ctx.combat.health();
-
         Condition.wait(new Callable<Boolean>() {
 
             @Override
             public Boolean call() throws Exception {
                 final int currHealth = ctx.combat.health();
-                return currHealth != startingHealth;
+                return currHealth > 6;
             }
         }, 150, 20);
     }

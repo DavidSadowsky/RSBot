@@ -37,7 +37,7 @@ public class Bank extends Task {
                 Condition.wait(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
-                        return !ctx.bank.opened();
+                        return ctx.bank.opened();
                     }
                 }, 250, 26);
             }
