@@ -8,9 +8,9 @@ public class Logout extends Task{
         super(ctx);
     }
 
-    final static int FIRE_RUNE = 1;
-    final static int AIR_RUNE = 1;
-    final static int MIND_RUNE = 1;
+    final static int FIRE_RUNE = 554;
+    final static int AIR_RUNE = 556;
+    final static int MIND_RUNE = 558;
 
     @Override
     public boolean activate() {

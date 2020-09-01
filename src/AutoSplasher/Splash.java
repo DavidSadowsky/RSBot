@@ -19,7 +19,7 @@ public class Splash extends Task {
 
     @Override
     public void execute() {
-        final Npc NPC_TO_ATTACK = ctx.npcs.select().nearest().poll();
+        final Npc NPC_TO_ATTACK = ctx.npcs.select().id(1338).nearest().poll();
         NPC_TO_ATTACK.interact("Attack");
         Condition.wait(new Callable<Boolean>() {
             @Override
