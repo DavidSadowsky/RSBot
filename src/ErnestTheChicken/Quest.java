@@ -1,6 +1,5 @@
 package ErnestTheChicken;
 
-import Smither.Walker;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.*;
@@ -14,7 +13,7 @@ public class Quest extends Task {
     public static final Tile[] profToFirstFloor = {new Tile(3110, 3366, 2), new Tile(3107, 3364, 2), new Tile(3106, 3363, 1), new Tile(3106, 3366, 1), new Tile(3108, 3361, 0)};
     public static final Tile[] firstFloorToBookCase = {new Tile(3106, 3368, 0), new Tile(3104, 3365, 0), new Tile(3103, 3362, 0), new Tile(3100, 3361, 0)};
 
-    private final Smither.Walker walker = new Walker(ctx);
+    private final Walker walker = new Walker(ctx);
 
     public Quest(ClientContext ctx) {
         super(ctx);
