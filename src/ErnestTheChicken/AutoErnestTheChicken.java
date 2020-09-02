@@ -22,6 +22,10 @@ public class AutoErnestTheChicken extends PollingScript<ClientContext>  {
 
     @Override
     public void poll() {
+        if(!ctx.movement.running(true)) {
+            ctx.movement.running(true);
+            System.out.println("Turning on run...");
+        }
         for(Task task : taskList) {
             if(!hasStarted) {
                 hasStarted = true;

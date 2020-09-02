@@ -13,9 +13,6 @@ public class Quest extends Task {
     public static final Tile[] veronicaToProf =  {new Tile(3110, 3330, 0), new Tile(3110, 3333, 0), new Tile(3109, 3336, 0), new Tile(3109, 3339, 0), new Tile(3109, 3342, 0), new Tile(3109, 3345, 0), new Tile(3109, 3348, 0), new Tile(3109, 3351, 0), new Tile(3108, 3354, 0), new Tile(3109, 3357, 0), new Tile(3109, 3360, 0), new Tile(3109, 3366, 1), new Tile(3106, 3366, 1), new Tile(3105, 3364, 2), new Tile(3108, 3364, 2)};
     public static final Tile[] profToFirstFloor = {new Tile(3110, 3366, 2), new Tile(3107, 3364, 2), new Tile(3106, 3363, 1), new Tile(3106, 3366, 1), new Tile(3108, 3361, 0)};
     public static final Tile[] firstFloorToBookCase = {new Tile(3106, 3368, 0), new Tile(3104, 3365, 0), new Tile(3103, 3362, 0), new Tile(3100, 3361, 0)};
-    public static final Tile[] bookcaseToFishFood = {new Tile(3098, 3359, 0), new Tile(3102, 3362, 0), new Tile(3104, 3367, 0), new Tile(3106, 3362, 0), new Tile(3108, 3366, 1), new Tile(3113, 3367, 1), new Tile(3116, 3363, 1), new Tile(3112, 3359, 1), new Tile(3109,3357,1)};
-    public static final Tile[] fishFoodToPoison = {new Tile(3108, 3356, 1), new Tile(3113, 3358, 1), new Tile(3116, 3362, 1), new Tile(3114, 3367, 1), new Tile(3109, 3366, 1), new Tile(3109, 3361, 0), new Tile(3107, 3366, 0), new Tile(3104, 3370, 0), new Tile(3099, 3367, 0), new Tile(3099,3366,0)};
-
 
     private final Smither.Walker walker = new Walker(ctx);
 
@@ -38,11 +35,13 @@ public class Quest extends Task {
         ctx.camera.angle('n');
         ctx.camera.pitch(50);
         Condition.sleep(1000);
-        Component gamelogUI = ctx.widgets.widget(162).component(4);
-        gamelogUI.click();
-        Condition.sleep(1000);
         final Npc VERONICA = ctx.npcs.select().id(3561).poll();
         VERONICA.interact("Talk-to");
+        Condition.sleep(3000);
+        while(!ctx.chat.canContinue()) {
+            Condition.sleep(3000);
+            VERONICA.interact("Talk-to");
+        }
         Condition.wait(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -70,13 +69,15 @@ public class Quest extends Task {
     public void talkToProf() {
         while(ctx.players.local().tile().floor() != 2) {
             walker.walkPath(veronicaToProf);
-            Condition.sleep(500);
+            Condition.sleep(1000);
             if(ctx.players.local().tile().floor() == 1) {
-                ctx.camera.angle(270);
+                ctx.camera.angle(180);
             }
         }
         final GameObject DOOR = ctx.objects.select().id(11540).nearest().poll();
         DOOR.interact("Open");
+        ctx.camera.pitch(50);
+        ctx.camera.angle(270);
         Condition.sleep(3000);
         final Npc PROF = ctx.npcs.select().id(3562).poll();
         PROF.interact("Talk-to");
@@ -112,6 +113,7 @@ public class Quest extends Task {
             ctx.chat.clickContinue();
         }
         System.out.println("Professor dialogue complete.");
+        ctx.camera.pitch(50);
         return;
     }
 
@@ -122,10 +124,10 @@ public class Quest extends Task {
         }
         Tile doorTile = new Tile(3106, 3368, 0);
         ctx.movement.step(doorTile);
-        Condition.sleep(2000);
+        Condition.sleep(5000);
         GameObject door = ctx.objects.select().id(11540).nearest().poll();
         door.interact("Open");
-        Condition.sleep(500);
+        Condition.sleep(1000);
         Tile bookcaseTile = new Tile(3098, 3359, 0);
         while(bookcaseTile.distanceTo(ctx.players.local()) > 3) {
             walker.walkPath(firstFloorToBookCase);
@@ -141,6 +143,7 @@ public class Quest extends Task {
         GameObject ladder = ctx.objects.select().id(133).nearest().poll();
         ladder.interact("Climb-down");
         System.out.println("Starting puzzle...");
+        Condition.sleep(3000);
         return;
     }
 
@@ -229,15 +232,14 @@ public class Quest extends Task {
     }
 
     public void pullExitLever() {
-        GameObject lever = ctx.objects.select().id(160).poll();
+        final GameObject lever = ctx.objects.select().id(160).poll();
         ctx.camera.turnTo(lever.tile());
         Condition.sleep(1000);
         lever.bounds(105, 134, -204, -166, 55, 78);
         lever.click();
-        Condition.sleep(3000);
         while(ctx.players.local().tile().x() != 3098 && ctx.players.local().tile().y() != 3358) {
-            lever.click();
             Condition.sleep(3000);
+            lever.click();
         }
     }
 
@@ -398,6 +400,7 @@ public class Quest extends Task {
         LADDER.interact("Climb-up");
         Condition.sleep(3000);
         pullExitLever();
+        Condition.sleep(3000);
         return;
     }
 
@@ -440,9 +443,9 @@ public class Quest extends Task {
         ctx.movement.step(new Tile(3111,3358,1));
         Condition.sleep(5000);
         GameObject DOOR_5 = ctx.objects.select().id(11540).nearest().poll();
-        ctx.camera.turnTo(DOOR_5);
         Condition.sleep(2000);
         DOOR_5.interact("Open");
+        ctx.camera.angle(90);
         Condition.sleep(1000);
         GroundItem FISH_FOOD = ctx.groundItems.select().id(272).poll();
         final int inventCount = ctx.inventory.count();
@@ -530,14 +533,112 @@ public class Quest extends Task {
         Item POISONED_FISH_FOOD = ctx.inventory.select().id(274).poll();
         POISONED_FISH_FOOD.interact("Use");
         GameObject FOUNTAIN = ctx.objects.select().id(153).nearest().poll();
-        FOUNTAIN.interact("Search");
+        FOUNTAIN.click();
         Condition.sleep(5000);
-        FOUNTAIN.interact("Search");
+        FOUNTAIN.click();
         Condition.sleep(5000);
         while(ctx.chat.canContinue()) {
             ctx.chat.clickContinue();
             Condition.sleep(1000);
         }
+        return;
+    }
+
+    public void rubberTube() {
+        Condition.sleep(3000);
+        ctx.movement.step(new Tile(3091,3347,0));
+        Condition.sleep(5000);
+        ctx.movement.step(new Tile(3086,3358,0));
+        Condition.sleep(5000);
+        GameObject COMPOST_HEAP = ctx.objects.select().id(152).poll();
+        ctx.camera.turnTo(COMPOST_HEAP);
+        Condition.sleep(2000);
+        COMPOST_HEAP.click();
+        Condition.sleep(5000);
+        ctx.movement.step(new Tile(3095,3346,0));
+        Condition.sleep(5000);
+        ctx.movement.step(new Tile(3107,3353,0));
+        Condition.sleep(30000);
+        GameObject DOOR_1 = ctx.objects.select().id(11541).nearest().poll();
+        ctx.camera.turnTo(DOOR_1);
+        DOOR_1.interact("Open");
+        Condition.sleep(3000);
+        ctx.movement.step(new Tile(3109,3357,0));
+        Condition.sleep(2000);
+        GameObject DOOR_2 = ctx.objects.select().id(11540).nearest().poll();
+        ctx.camera.turnTo(DOOR_2);
+        DOOR_2.interact("Open");
+        ctx.movement.step(new Tile(3107,3367,0));
+        Condition.sleep(5000);
+        while(ctx.movement.energyLevel() < 10 || ctx.combat.health() < ctx.combat.maxHealth()){
+            System.out.println("Restoring run and HP...");
+            Condition.sleep(15000);
+        }
+        if(!ctx.movement.running(true)) {
+            ctx.movement.running(true);
+        }
+        GroundItem RUBBER_TUBE = ctx.groundItems.select().id(276).poll();
+        GameObject SKELETON_DOOR = ctx.objects.select().id(11540).nearest().poll();
+        ctx.camera.turnTo(SKELETON_DOOR);
+        Condition.sleep(3000);
+        SKELETON_DOOR.click();
+        Condition.sleep(1000);
+        RUBBER_TUBE.interact("Take");
+        final int INVENTORY_COUNT = ctx.inventory.select().count();
+        Condition.wait(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return INVENTORY_COUNT != ctx.inventory.select().count();
+            }
+        },100, 50);
+        SKELETON_DOOR.click();
+        Condition.wait(new Callable<Boolean>() {
+            final int x = ctx.players.local().tile().x();
+            final int y = ctx.players.local().tile().y();
+            @Override
+            public Boolean call() throws Exception {
+                return (x == 3107) && (y == 3367);
+            }
+        }, 250, 20);
+        ctx.movement.step(new Tile(3109,3361,0));
+        Condition.sleep(5000);
+        GameObject STAIR_1 = ctx.objects.select().id(11487).nearest().poll();
+        ctx.camera.turnTo(STAIR_1);
+        STAIR_1.interact("Climb-up");
+        Condition.sleep(2000);
+        ctx.movement.step(new Tile(3105,3364,1));
+        Condition.sleep(3000);
+        GameObject STAIR_2 = ctx.objects.select().id(11511).nearest().poll();
+        ctx.camera.turnTo(STAIR_2);
+        STAIR_2.interact("Climb-up");
+        Condition.sleep(2000);
+        GameObject DOOR_4 = ctx.objects.select().id(11540).nearest().poll();
+        DOOR_4.interact("Open");
+        ctx.camera.angle(270);
+        Condition.sleep(3000);
+        Npc PROF = ctx.npcs.select().id(3562).poll();
+        PROF.interact("Talk-to");
+        Condition.wait(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return ctx.chat.canContinue();
+            }
+        }, 250, 25);
+        while(ctx.chat.canContinue()) {
+            ctx.chat.clickContinue();
+            Condition.sleep(750);
+        }
+        while(!ctx.chat.canContinue()) {
+            System.out.println("Waiting for cutscene...");
+            Condition.sleep(1000);
+        }
+        while(ctx.chat.canContinue()) {
+            ctx.chat.clickContinue();
+            Condition.sleep(750);
+        }
+        Condition.sleep(3000);
+        System.out.println("Quest Completed");
+        System.exit(0);
         return;
     }
 
@@ -548,5 +649,6 @@ public class Quest extends Task {
         walkToPuzzle();
         puzzle();
         poisonPiranhas();
+        rubberTube();
     }
 }

@@ -3,7 +3,7 @@ package AutoSplasher;
 import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Game;
 
-public class Logout extends Task{
+public class Logout extends Task {
     public Logout(ClientContext ctx) {
         super(ctx);
     }
