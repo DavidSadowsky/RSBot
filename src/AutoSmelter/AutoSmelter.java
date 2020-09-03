@@ -1,4 +1,4 @@
-package Smither;
+package AutoSmelter;
 
 import org.powerbot.script.*;
 import org.powerbot.script.rt4.ClientContext;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Script.Manifest(name="AutoSmelter", description="Smelts ores", properties = "author=David Sadowsky; topic=999; client=4;")
 
-public class AutoSmither extends PollingScript<ClientContext> {
+public class AutoSmelter extends PollingScript<ClientContext> {
     List<Task> taskList = new ArrayList<Task>();
 
     long startTime = System.currentTimeMillis();
@@ -21,7 +21,7 @@ public class AutoSmither extends PollingScript<ClientContext> {
     public void start() {
         taskList.add(new Bank(ctx));
         taskList.add(new Walk(ctx));
-        taskList.add(new Smith(ctx));
+        taskList.add(new Smelt(ctx));
     }
 
     @Override

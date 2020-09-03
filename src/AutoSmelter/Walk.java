@@ -1,4 +1,4 @@
-package Smither;
+package AutoSmelter;
 
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.ClientContext;

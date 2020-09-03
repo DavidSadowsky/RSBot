@@ -1,26 +1,21 @@
-package Smither;
+package AutoSmelter;
 
 import org.powerbot.script.Condition;
-import org.powerbot.script.Filter;
-import org.powerbot.script.Locatable;
-import org.powerbot.script.Tile;
-import org.powerbot.script.rt4.Camera;
 import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Component;
 import org.powerbot.script.rt4.GameObject;
 
 import java.util.Date;
-import java.util.Random;
 import java.util.concurrent.Callable;
 
-public class Smith extends Task {
+public class Smelt extends Task {
 
     final static int TIN_ID = 438;
     final static int COPPER_ID = 436;
     final static int FURNACE_ID = 24012;
 
 
-    public Smith(ClientContext ctx) {
+    public Smelt(ClientContext ctx) {
         super(ctx);
     }
 
