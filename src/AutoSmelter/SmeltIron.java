@@ -10,8 +10,7 @@ import java.util.concurrent.Callable;
 
 public class SmeltIron extends Task {
 
-    // Change this to iron ore ID
-    final static int IRON_ORE_ID = 438;
+    final static int IRON_ORE_ID = 440;
     final static int FURNACE_ID = 24012;
 
 
@@ -44,6 +43,7 @@ public class SmeltIron extends Task {
                     return ctx.widgets.widget(270).component(14).valid();
                 }
             }, 250, 26);
+            // Change this to correct widget
             Component smelt = ctx.widgets.widget(270).component(14);
             smelt.click();
             Condition.wait(new Callable<Boolean>() {

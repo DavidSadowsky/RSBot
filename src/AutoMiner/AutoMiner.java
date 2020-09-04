@@ -4,6 +4,7 @@ import org.powerbot.script.*;
 import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Game;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,9 +20,23 @@ public class AutoMiner extends PollingScript<ClientContext> {
 
     @Override
     public void start() {
-        taskList.add(new Bank(ctx));
-        taskList.add(new Walk(ctx));
-        taskList.add(new Mine(ctx));
+        String mineOptions[] = {"Copper/Tin Ore", "Iron Ore"};
+        String mineChoice = (String) "" + JOptionPane.showInputDialog(null, "Select ore to mine","AutoMiner", JOptionPane.PLAIN_MESSAGE, null, mineOptions, mineOptions[0]);
+
+
+        System.out.println(mineChoice);
+        if(mineChoice.equals("Copper/Tin Ore")) {
+            taskList.add(new Bank(ctx));
+            taskList.add(new WalkLumbridgeBank(ctx));
+            taskList.add(new MineCopperAndTin(ctx));
+            System.out.println("Tasks loaded");
+        }
+        else if (mineChoice.equals("Iron Ore")) {
+            taskList.add(new Deposit(ctx));
+            taskList.add(new WalkPortSarimBox(ctx));
+            taskList.add(new MineIron(ctx));
+            System.out.println("Tasks loaded");
+        }
     }
 
     @Override
@@ -47,14 +62,6 @@ public class AutoMiner extends PollingScript<ClientContext> {
 
     @Override
     public void poll() {
-        if(ctx.game.tab() != Game.Tab.INVENTORY) {
-            System.out.println("Opening inventory");
-            ctx.game.tab(Game.Tab.INVENTORY);
-        }
-        if(ctx.movement.energyLevel() == 100 && !(ctx.movement.running(true))) {
-            System.out.println("Turning on run");
-            ctx.movement.running(true);
-        }
         for(Task task : taskList) {
             if((new Date()).getTime() - startTime > 10*60*1000 && ctx.objects.id(ROCK_IDS).nearest().poll().tile().distanceTo(ctx.players.local()) < 10) {
                stop();

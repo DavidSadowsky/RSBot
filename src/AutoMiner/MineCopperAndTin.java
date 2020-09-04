@@ -6,7 +6,7 @@ import org.powerbot.script.rt4.GameObject;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-public class Mine extends Task {
+public class MineCopperAndTin extends Task {
 
 
     final static int COPPER_IDS[] = { 10943, 11161 };
@@ -16,7 +16,7 @@ public class Mine extends Task {
     GameObject CURR_ROCK;
 
 
-    public Mine(ClientContext ctx) {
+    public MineCopperAndTin(ClientContext ctx) {
         super(ctx);
     }
 
