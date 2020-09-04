@@ -4,6 +4,7 @@ import org.powerbot.script.*;
 import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Game;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,9 +20,18 @@ public class AutoSmelter extends PollingScript<ClientContext> {
 
     @Override
     public void start() {
+
+        String smeltOptions[] = {"Bronze", "Iron"};
+        String smeltChoice = (String) "" + JOptionPane.showInputDialog(null, "Select bar to smelt","AutoSmelter", JOptionPane.PLAIN_MESSAGE, null, smeltOptions, smeltOptions[0]);
+
         taskList.add(new Bank(ctx));
         taskList.add(new Walk(ctx));
-        taskList.add(new Smelt(ctx));
+        if(smeltChoice == "Bronze") {
+            taskList.add(new SmeltBronze(ctx));
+        }
+        if(smeltChoice == "Iron") {
+            taskList.add(new SmeltIron(ctx));
+        }
     }
 
     @Override

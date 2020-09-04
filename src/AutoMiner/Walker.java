@@ -1,4 +1,4 @@
-package Miner;
+package AutoMiner;
 
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;

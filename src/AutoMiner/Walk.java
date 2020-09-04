@@ -1,4 +1,4 @@
-package Miner;
+package AutoMiner;
 
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.ClientContext;

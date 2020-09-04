@@ -8,14 +8,12 @@ import org.powerbot.script.rt4.GameObject;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
-public class Smelt extends Task {
+public class SmeltBronze extends Task {
 
-    final static int TIN_ID = 438;
-    final static int COPPER_ID = 436;
     final static int FURNACE_ID = 24012;
 
 
-    public Smelt(ClientContext ctx) {
+    public SmeltBronze(ClientContext ctx) {
         super(ctx);
     }
 
@@ -33,7 +31,7 @@ public class Smelt extends Task {
 
     @Override
     public void execute() {
-        GameObject furnace = ctx.objects.select().id(FURNACE_ID).nearest().poll();
+        final GameObject furnace = ctx.objects.select().id(FURNACE_ID).nearest().poll();
         if(furnace.inViewport()) {
             furnace.interact("Smelt");
             Condition.wait(new Callable<Boolean>() {
@@ -47,7 +45,7 @@ public class Smelt extends Task {
             Condition.wait(new Callable<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
-                    return ctx.players.local().animation() == -1;
+                    return ctx.players.local().animation() != -1;
                 }
             }, 250,26);
             Condition.sleep(5000);
