@@ -62,6 +62,9 @@ public class AutoMiner extends PollingScript<ClientContext> {
 
     @Override
     public void poll() {
+        if(ctx.players.local().tile().floor() == 1) {
+            ctx.objects.select().id(2413).nearest().poll().interact("Cross");
+        }
         for(Task task : taskList) {
             if((new Date()).getTime() - startTime > 10*60*1000 && ctx.objects.id(ROCK_IDS).nearest().poll().tile().distanceTo(ctx.players.local()) < 10) {
                stop();
