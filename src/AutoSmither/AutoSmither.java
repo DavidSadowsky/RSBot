@@ -1,39 +1,34 @@
-package AutoSmelter;
+package AutoSmither;
 
-import org.powerbot.script.*;
+import AutoSmelter.*;
+import org.powerbot.script.Condition;
+import org.powerbot.script.PollingScript;
+import org.powerbot.script.Random;
+import org.powerbot.script.Script;
 import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Game;
+import org.powerbot.script.rt4.Skills;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Script.Manifest(name="AutoSmelter", description="Smelts ores", properties = "author=David Sadowsky; topic=999; client=4;")
+@Script.Manifest(name="AutoSmither", description="Smiths bars", properties = "author=David Sadowsky; topic=999; client=4;")
 
-public class AutoSmelter extends PollingScript<ClientContext> {
+public class AutoSmither extends PollingScript<ClientContext> {
     List<Task> taskList = new ArrayList<Task>();
 
     long startTime = System.currentTimeMillis();
     int breakCount = 0;
     final static int FURNACE_ID = 24012;
+    Skills skills = new Skills(ctx);
 
     @Override
     public void start() {
-
-        String smeltOptions[] = {"Bronze", "Iron"};
-        String smeltChoice = (String) "" + JOptionPane.showInputDialog(null, "Select bar to smelt","AutoSmelter", JOptionPane.PLAIN_MESSAGE, null, smeltOptions, smeltOptions[0]);
-
-        if(smeltChoice.equals("Bronze")) {
-            taskList.add(new BankBronze(ctx));
-            taskList.add(new WalkBronze(ctx));
-            taskList.add(new SmeltBronze(ctx));
-        }
-        if(smeltChoice.equals("Iron")) {
-            taskList.add(new BankIron(ctx));
-            taskList.add(new WalkIron(ctx));
-            taskList.add(new SmeltIron(ctx));
-        }
+            taskList.add(new Bank(ctx));
+            taskList.add(new Walk(ctx));
+            taskList.add(new Smith(ctx));
     }
 
     @Override
@@ -63,6 +58,9 @@ public class AutoSmelter extends PollingScript<ClientContext> {
         if(ctx.game.tab() != Game.Tab.INVENTORY && !(ctx.bank.opened())) {
             System.out.println("Opening inventory");
             ctx.game.tab(Game.Tab.INVENTORY);
+        }
+        if(skills.level(13) > 39) {
+            System.exit(0);
         }
         for(Task task : taskList) {
             if((new Date()).getTime() - startTime > 10*60*1000 && ctx.objects.id(FURNACE_ID).nearest().poll().tile().distanceTo(ctx.players.local()) < 10) {
