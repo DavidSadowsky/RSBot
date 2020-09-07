@@ -45,7 +45,6 @@ public class Smith extends Task {
                     return ctx.widgets.widget(312).component(22).valid();
                 }
             }, 250, 26);
-            // Change this to correct widget
             Component smith = ctx.widgets.widget(312).component(22);
             smith.click();
             Condition.wait(new Callable<Boolean>() {

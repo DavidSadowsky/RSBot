@@ -1,15 +1,17 @@
-package AutoMiner;
+package FishAndCook;
 
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.ClientContext;
 
 import java.util.concurrent.Callable;
 
-public class Bank extends Task {
+public class BankShrimpFishing extends Task {
 
-    public Bank(ClientContext ctx) {
+    public BankShrimpFishing(ClientContext ctx) {
         super(ctx);
     }
+
+    final int SHRIMP_ID = 317;
 
     @Override
     public boolean activate() {
@@ -18,9 +20,10 @@ public class Bank extends Task {
 
     @Override
     public void execute() {
+        ctx.camera.turnTo(ctx.bank.nearest());
         if(ctx.bank.opened()) {
             final int inventCount = ctx.inventory.select().count();
-            if(ctx.bank.depositInventory()) {
+            if(ctx.bank.depositAllExcept(303)) {
                 Condition.wait(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
@@ -30,9 +33,6 @@ public class Bank extends Task {
             }
         }
         else {
-            if(!ctx.bank.inViewport()) {
-                ctx.camera.turnTo(ctx.bank.nearest());
-            }
             if(ctx.bank.open()) {
                 Condition.wait(new Callable<Boolean>() {
                     @Override
@@ -41,7 +41,6 @@ public class Bank extends Task {
                     }
                 }, 250, 26);
             }
-
         }
     }
 }
