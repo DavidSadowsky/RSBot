@@ -45,7 +45,7 @@ public class FishAndCook extends PollingScript<ClientContext> {
 
     @Override
     public void poll() {
-        if(ctx.chat.canContinue()) {
+        while(ctx.chat.canContinue()) {
             ctx.chat.clickContinue();
         }
         if(ctx.game.tab() != Game.Tab.INVENTORY && !(ctx.bank.opened())) {
@@ -84,6 +84,7 @@ public class FishAndCook extends PollingScript<ClientContext> {
         if(BARB_VILLAGE.contains(ctx.players.local()) && !BARB_WALKING_TASKS_REMOVED) {
 
             // Clear old tasks
+            ctx.camera.pitch(100);
             taskList.clear();
             System.out.println("Tasks for walking to barbarian village fishing spot unloaded.");
 
@@ -96,6 +97,9 @@ public class FishAndCook extends PollingScript<ClientContext> {
 
             BARB_WALKING_TASKS_REMOVED = true;
             ctx.camera.angle(180);
+        }
+        if(skills.level(7) >= 50 && skills.level(10) >= 50) {
+            System.exit(0);
         }
         for(Task task : taskList) {
             if(task.activate()) {

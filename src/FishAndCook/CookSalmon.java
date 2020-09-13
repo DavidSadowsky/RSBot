@@ -36,7 +36,7 @@ public class CookSalmon extends Task {
         final GameObject FIRE = ctx.objects.select().id(FIRE_ID).nearest().poll();
         final Item SALMON_TO_COOK = ctx.inventory.select().id(UNCOOKED_SALMON).poll();
         if(!FIRE.inViewport()) {
-            ctx.camera.angle(270);
+            ctx.camera.angle(ctx.camera.x() + 10);
         }
         ctx.camera.turnTo(FIRE);
         if(FIRE.tile().distanceTo(ctx.players.local().tile()) > 3) {
